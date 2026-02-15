@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<body style="margin: 0; padding: 0; overflow: hidden;"><img id="image" src="/image.webp"
+        style="width: 100%; height: 100%; object-fit: cover;">
+    <audio id="audioPlayer" src="/pranksound.mp3"></audio>
+    <audio id="audioPlayer2" src="/clapping.mp3"></audio>
+    <script>
+        let isFullscreen = false;
+        document.addEventListener('keydown', (event) => {
+            // Log the key pressed to the console for demonstration
+            console.log('Key pressed:', event.key);
+            console.log('Key code (modern):', event.code);
+
+            // You can add logic here to perform actions based on the key
+            if (event.key === 'Enter') {
+                document.documentElement.requestFullscreen();
+                isFullscreen = true;
+                document.onkeydown = function () {
+                    prank();
+
+                };
+
+                document.onclick = function () {
+                    prank();
+
+                };
+            }
+        });
+
+        if (isFullscreen) {
+            document.onkeydown = function () {
+                prank();
+            };
+
+            document.onclick = function () {
+                prank();
+            };
+
+        }
+        function prank() {
+            document.getElementById("image").src = "/jumpscare.webp";
+            document.getElementById("image").style.height = "100%";
+            document.getElementById("image").style.width = "40%";
+
+            document.getElementById("audioPlayer").play();
+            document.getElementById("audioPlayer2").play();
+            clone();
+        }
+
+        function clone() {
+            window.open('/prank.html', '_blank', 'width=500,height=500');
+        }
+
+    </script>
+</body>
+
+
+</html>

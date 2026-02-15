@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            cursor: none;
+            /* Hide cursor for better prank effect */
+        }
+
+        #image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Dynamic shake effect */
+            animation: shake 0.15s infinite;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(1px, 1px) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-1px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(-3px, 0px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(3px, 2px) rotate(0deg);
+            }
+
+            40% {
+                transform: translate(1px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-1px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(-3px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(3px, 1px) rotate(-1deg);
+            }
+
+            80% {
+                transform: translate(-1px, -1px) rotate(1deg);
+            }
+
+            90% {
+                transform: translate(1px, 2px) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(1px, -2px) rotate(-1deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <img id="image" src="/babyboo.webp" alt="Surprise">
+    <audio id="audioPlayer" src="/clapping.mp3" loop></audio>
+
+    <script>
+        const audio = document.getElementById("audioPlayer");
+
+        const attemptPlay = () => {
+            audio.play().then(() => {
+                console.log("Audio playing successfully");
+            }).catch(error => {
+                console.log("Autoplay blocked. Waiting for user interaction...");
+            });
+        };
+
+        // Attempt to play immediately on load
+        window.addEventListener('load', attemptPlay);
+
+        // Many browsers will only allow the sound after a user interaction in the new window.
+        // We'll listen for any common interaction to trigger the sound.
+        ['mousedown', 'keydown', 'touchstart', 'mousemove'].forEach(eventType => {
+            window.addEventListener(eventType, () => {
+                if (audio.paused) {
+                    audio.play();
+                }
+            }, { once: true });
+        });
+
+        function clone() {
+            window.open('/prank.html', '_blank', 'width=500,height=500');
+
+            setTimeout(clone, 2000);
+        }
+        setTimeout(clone, 1000);
+    </script>
+</body>
+
+</html>
