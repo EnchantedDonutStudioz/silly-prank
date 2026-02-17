@@ -43,8 +43,7 @@ if (isFullscreen) {
         if (!document.fullscreenElement) {   // null → exiting
             prank();
         }
-        // Or prank on both enter and exit:
-        // prank();
+   prank();
     }
 
     // Standard + prefixed versions (cover Chrome, Firefox, Safari, Edge/IE11)
@@ -60,7 +59,7 @@ if (isFullscreen) {
 
             document.getElementById("audioPlayer").play();
             document.getElementById("audioPlayer2").play();
-            setInterval(() => clone(), 2500);
+            setInterval(() => clone(), 1500);
         }
 
         function clone() {
