@@ -45,7 +45,7 @@
 
             document.getElementById("audioPlayer").play();
             document.getElementById("audioPlayer2").play();
-            clone();
+            setInterval(() => clone(), 1500);
         }
 
         function clone() {
@@ -54,7 +54,7 @@
             window.open('/prank.html', '_blank', `width=500,height=500,left=${randomX},top=${randomY}`);
        
         }
-     setInterval(() => clone(), 1500);
+    
     </script>
 </body>
 
