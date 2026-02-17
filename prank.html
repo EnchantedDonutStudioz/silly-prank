@@ -104,10 +104,29 @@
         });
 
         function clone() {
-            window.open('/prank.html', '_blank', 'width=500,height=500');
+    // Get viewport / screen dimensions (innerWidth is safer for most cases)
+    const screenWidth  = window.screen.width;
+    const screenHeight = window.screen.height;
+    
+    // Popup size
+    const w = 500;
+    const h = 500;
+    
+    // Calculate random position (so the whole window stays on screen)
+    const randomX = Math.floor(Math.random() * (screenWidth  - w));
+    const randomY = Math.floor(Math.random() * (screenHeight - h));
+    
+    // Build the features string
+    const features = 
+        `width=${w},height=${h},` +
+        `left=${randomX},top=${randomY},` +
+        `resizable=yes,scrollbars=no,status=no`;   // you can remove some of these
 
-            setTimeout(clone, 200);
-        }
+    window.open('/prank.html', '_blank', features);
+}
+
+// Launch after 200 ms
+setTimeout(clone, 200);
     </script>
 </body>
 
