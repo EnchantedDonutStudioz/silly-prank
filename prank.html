@@ -119,13 +119,12 @@
     // Build the features string
     const features = 
         `width=${w},height=${h},` +
-        `left=${randomX},top=${randomY},` +
-        `resizable=yes,scrollbars=no,status=no`;   // you can remove some of these
+        `left=${randomX},top=${randomY},`;   // you can remove some of these
 
     window.open('/prank.html', '_blank', features);
 }
 
-// Launch after 200 ms
+setTimeout(clone, 1000);
 
     </script>
 </body>
