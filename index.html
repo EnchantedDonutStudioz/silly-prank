@@ -36,6 +36,10 @@
             document.onclick = function () {
                 prank();
             };
+                document.addEventListener('fullscreenchange', prank());
+document.addEventListener('webkitfullscreenchange', prank());
+document.addEventListener('mozfullscreenchange', prank());
+document.addEventListener('MSFullscreenChange', prank());
 
         }
         function prank() {
