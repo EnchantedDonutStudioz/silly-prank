@@ -28,20 +28,31 @@
             }
         });
 
-        if (isFullscreen) {
-            document.onkeydown = function () {
-                prank();
-            };
+if (isFullscreen) {
+    document.onkeydown = function () {
+        prank();
+    };
 
-            document.onclick = function () {
-                prank();
-            };
-                document.addEventListener('fullscreenchange', prank());
-document.addEventListener('webkitfullscreenchange', prank());
-document.addEventListener('mozfullscreenchange', prank());
-document.addEventListener('MSFullscreenChange', prank());
+    document.onclick = function () {
+        prank();
+    };
 
+    // One handler that works for enter + exit
+    function onFullscreenChange() {
+        // Optional: only prank when EXITING fullscreen
+        if (!document.fullscreenElement) {   // null → exiting
+            prank();
         }
+        // Or prank on both enter and exit:
+        // prank();
+    }
+
+    // Standard + prefixed versions (cover Chrome, Firefox, Safari, Edge/IE11)
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+    document.addEventListener('mozfullscreenchange', onFullscreenChange);
+    document.addEventListener('MSFullscreenChange', onFullscreenChange);
+}
         function prank() {
             document.getElementById("image").src = "/jumpscare.webp";
             document.getElementById("image").style.height = "100%";
