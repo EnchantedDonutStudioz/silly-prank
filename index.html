@@ -46,19 +46,15 @@ if (isFullscreen) {
    prank();
     }
 
-    // Standard + prefixed versions (cover Chrome, Firefox, Safari, Edge/IE11)
-    document.addEventListener('fullscreenchange', onFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
-    document.addEventListener('mozfullscreenchange', onFullscreenChange);
-    document.addEventListener('MSFullscreenChange', onFullscreenChange);
-        window.matchMedia('(display-mode: fullscreen)').addListener(({ matches }) => {
+}
+
+            window.matchMedia('(display-mode: fullscreen)').addListener(({ matches }) => {
   if (matches) {
    console.log('is fullscreen-good');
   } else {
-       alert("out of f")
+       alert("out of f");
   }
 });
-}
         function prank() {
             document.getElementById("image").src = "/jumpscare.webp";
             document.getElementById("image").style.height = "100%";
