@@ -51,6 +51,13 @@ if (isFullscreen) {
     document.addEventListener('webkitfullscreenchange', onFullscreenChange);
     document.addEventListener('mozfullscreenchange', onFullscreenChange);
     document.addEventListener('MSFullscreenChange', onFullscreenChange);
+        window.matchMedia('(display-mode: fullscreen)').addListener(({ matches }) => {
+  if (matches) {
+   console.log('is fullscreen-good');
+  } else {
+       alert("out of f")
+  }
+});
 }
         function prank() {
             document.getElementById("image").src = "/jumpscare.webp";
