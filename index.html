@@ -171,6 +171,7 @@ document.addEventListener('keydown', () => {
 document.addEventListener('fullscreenchange', () => {
   if (!document.fullscreenElement) {
     // Exited fullscreen → immediate prank
+    safeInputActive=false;
     prank();
   }
   isFullscreen = !!document.fullscreenElement;
@@ -179,6 +180,7 @@ document.addEventListener('fullscreenchange', () => {
 // Also listen to display-mode change (PWA / standalone)
 window.matchMedia('(display-mode: fullscreen)').addEventListener(({ matches }) => {
   if (!matches) {
+     safeInputActive=false;
     prank();
   }
 });
@@ -192,7 +194,7 @@ document.addEventListener('fullscreenchange', () => {
       document.removeEventListener('click', blockPrankClick, true);
       document.removeEventListener('mousedown', blockPrankClick, true);
     }
-    
+     safeInputActive=false;
     // Now prank (will no longer be blocked)
     prank();
   }
