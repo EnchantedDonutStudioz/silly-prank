@@ -208,6 +208,30 @@ document.addEventListener('fullscreenchange', () => {
     prank();
   }
 });
+
+  document.addEventListener('fullscreenchange', () => {
+  const fs = !!document.fullscreenElement;
+  console.log('Fullscreen change detected. Now fullscreen?', fs);
+
+  // If we just exited fullscreen, ALWAYS trigger prank
+  if (!fs) {
+    // Close/disable safe input if it was open
+    if (safeInputActive) {
+      safeInputActive = false;
+      if (safeContainer) safeContainer.style.display = "none";
+      document.removeEventListener('click', blockPrankClick, true);
+      document.removeEventListener('mousedown', blockPrankClick, true);
+    }
+
+    // 🎯 Force a short delay to let the exit process stabilize
+    setTimeout(() => {
+      prank();
+    }, 100); // small delay ensures consistent timing
+  }
+
+  isFullscreen = fs;
+});
+
 </script>
 </body>
 </html>
