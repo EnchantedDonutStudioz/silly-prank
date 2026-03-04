@@ -1,80 +1,188 @@
 <!DOCTYPE html>
 <html>
-
-<body style="margin: 0; padding: 0; overflow: hidden; cursor: pointer;"><img id="image" src="/better.webp"
-        style="width: 100%; height: 100%; object-fit: cover;">
-    <audio id="audioPlayer" src="/pranksound.mp3"></audio>
-    <audio id="audioPlayer2" src="/clapping.mp3"></audio>
-    <script>
-        let isFullscreen = false;
-        document.addEventListener('keydown', (event) => {
-            // Log the key pressed to the console for demonstration
-            console.log('Key pressed:', event.key);
-            console.log('Key code (modern):', event.code);
-
-            // You can add logic here to perform actions based on the key
-            if (event.key === 'Enter') {
-                document.documentElement.requestFullscreen();
-                isFullscreen = true;
-                document.onkeydown = function () {
-                    prank();
-
-                };
-
-                document.onclick = function () {
-                    prank();
-
-                };
-            }
-        });
-
-if (isFullscreen) {
-    document.onkeydown = function () {
-        prank();
-    };
-
-    document.onclick = function () {
-        prank();
-    };
-
-    // One handler that works for enter + exit
-    function onFullscreenChange() {
-        // Optional: only prank when EXITING fullscreen
-        if (!document.fullscreenElement) {   // null → exiting
-            prank();
-        }
-   prank();
+<head>
+  <meta charset="UTF-8">
+  <title>Fullscreen Prank</title>
+  <style>
+    body { margin:0; padding:0; overflow:hidden; background:#000; cursor:pointer; font-family:Arial, sans-serif; }
+    #image { width:100%; height:100vh; object-fit:cover; position:fixed; top:0; left:0; }
+    #safe-input-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      z-index: 9999;
+      display: none;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255,0,0,0.4);
     }
+    #safe-input {
+      padding: 12px 20px;
+      font-size: 24px;
+      width: 280px;
+      margin: 20px 0;
+      border: 2px solid #444;
+      background: #111;
+      color: #0f0;
+    }
+    #safe-input:focus {
+      outline: none;
+      border-color: #0f0;
+      box-shadow: 0 0 10px #0f0;
+    }
+  </style>
+</head>
+<body>
 
+<img id="image" src="/better.webp" alt="background">
+
+<audio id="audioPlayer" src="/pranksound.mp3"></audio>
+<audio id="audioPlayer2" src="/clapping.mp3"></audio>
+
+<div id="safe-input-container">
+  <h2 style="margin:0 0 15px 0; color:#f44;">Emergency Override</h2>
+  <input type="text" id="safe-input" placeholder="type here..." autocomplete="off" spellcheck="false">
+  <p style="font-size:13px; opacity:0.7; margin-top:10px;">(enter to submit)</p>
+</div>
+
+<script>
+// ────────────────────────────────────────────────
+let isFullscreen = false;
+let safeInputActive = false;
+let safeInputElement = null;
+let safeContainer = null;
+
+// ────────────────────────────────────────────────
+function prank() {
+  if (safeInputActive) return; // block prank while safe input is open
+
+  document.getElementById("image").src = "/jumpscare.webp";
+  document.getElementById("image").style.height = "100%";
+  document.getElementById("image").style.width = "40%";
+  document.getElementById("image").style.margin = "0 auto";
+  document.getElementById("image").style.display = "block";
+
+  document.getElementById("audioPlayer").play().catch(()=>{});
+  document.getElementById("audioPlayer2").play().catch(()=>{});
+
+  clone();
+  setInterval(clone, 900);
 }
 
-            window.matchMedia('(display-mode: fullscreen)').addListener(({ matches }) => {
-  if (matches) {
-   console.log('is fullscreen-good');
-  } else {
-       prank();
+function clone() {
+  const w = 520;
+  const h = 520;
+  const left = Math.floor(Math.random() * (window.screen.width - w - 40));
+  const top  = Math.floor(Math.random() * (window.screen.height - h - 80));
+  window.open('/prank.html', '_blank', `width=${w},height=${h},left=${left},top=${top}`);
+}
+
+// ────────────────────────────────────────────────
+function createSafeInput() {
+  if (safeInputActive) return;
+
+  safeInputActive = true;
+  safeContainer = document.getElementById("safe-input-container");
+  safeInputElement = document.getElementById("safe-input");
+
+  safeContainer.style.display = "block";
+  safeInputElement.focus();
+
+  // Block clicks outside the input from triggering prank
+  document.addEventListener('click', blockPrankClick, true);
+  document.addEventListener('mousedown', blockPrankClick, true);
+
+  // Press Enter → check password
+  safeInputElement.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const val = safeInputElement.value.trim().toLowerCase();
+      if (val === 'hello') {
+        window.close(); // try to close tab (works only if opened by script)
+      } else {
+        safeInputActive = false;
+        safeContainer.style.display = "none";
+        prank();
+      }
+    }
+  });
+
+  // If user presses Esc → treat as failure
+  safeInputElement.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      safeInputActive = false;
+      safeContainer.style.display = "none";
+      prank();
+    }
+  });
+}
+
+function blockPrankClick(e) {
+  // Allow clicks inside the safe container
+  if (safeContainer.contains(e.target)) {
+    return;
+  }
+  // Block everything else → trigger prank
+  e.stopPropagation();
+  e.preventDefault();
+  safeInputActive = false;
+  safeContainer.style.display = "none";
+  prank();
+}
+
+// ────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  console.log('Key:', e.key, 'Code:', e.code);
+
+  // Backtick / grave accent → open safe input
+  if (e.key === '`' || e.key === '~' || e.code === 'Backquote') {
+    e.preventDefault();
+    createSafeInput();
+    return;
+  }
+
+  // Enter → go fullscreen + activate prank mode
+  if (e.key === 'Enter' && !isFullscreen) {
+    document.documentElement.requestFullscreen().catch(()=>{});
+    isFullscreen = true;
   }
 });
-        function prank() {
-            document.getElementById("image").src = "/jumpscare.webp";
-            document.getElementById("image").style.height = "100%";
-            document.getElementById("image").style.width = "40%";
 
-            document.getElementById("audioPlayer").play();
-            document.getElementById("audioPlayer2").play();
-        clone();
-            setInterval(() => clone(), 900);
-        }
+// ────────────────────────────────────────────────
+// Prank on any click / key when in normal mode (not safe input)
+document.addEventListener('click', () => {
+  if (!safeInputActive && document.fullscreenElement) {
+    prank();
+  }
+});
 
-        function clone() {
-                  const randomX = Math.floor(Math.random() * (window.screen.width - 500));
-            const randomY = Math.floor(Math.random() * (window.screen.height - 500));
-            window.open('/prank.html', '_blank', `width=500,height=500,left=${randomX},top=${randomY}`);
-       
-        }
-    
-    </script>
+document.addEventListener('keydown', () => {
+  if (!safeInputActive && document.fullscreenElement) {
+    prank();
+  }
+});
+
+// ────────────────────────────────────────────────
+// Detect exit from fullscreen → always prank
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    // Exited fullscreen → immediate prank
+    prank();
+  }
+  isFullscreen = !!document.fullscreenElement;
+});
+
+// Also listen to display-mode change (PWA / standalone)
+window.matchMedia('(display-mode: fullscreen)').addEventListener(({ matches }) => {
+  if (!matches) {
+    prank();
+  }
+});
+
+</script>
 </body>
-
-
 </html>
