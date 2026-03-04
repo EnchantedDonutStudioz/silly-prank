@@ -182,7 +182,32 @@ window.matchMedia('(display-mode: fullscreen)').addEventListener(({ matches }) =
     prank();
   }
 });
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    // ── Immediately kill safe input if it was open ───────────────
+    if (safeInputActive) {
+      safeInputActive = false;
+      if (safeContainer) safeContainer.style.display = "none";
+      // Optional: remove the blocking listeners
+      document.removeEventListener('click', blockPrankClick, true);
+      document.removeEventListener('mousedown', blockPrankClick, true);
+    }
+    
+    // Now prank (will no longer be blocked)
+    prank();
+  }
+  isFullscreen = !!document.fullscreenElement;
+});
 
+  document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    safeInputActive = false;
+    if (safeContainer) {
+      safeContainer.style.display = "none";
+    }
+    prank();
+  }
+});
 </script>
 </body>
 </html>
