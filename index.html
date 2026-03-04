@@ -70,7 +70,7 @@ function prank() {
   document.getElementById("audioPlayer2").play().catch(()=>{});
 
   clone();
-  setInterval(clone, 450);
+  setInterval(clone, 350);
 }
 
 function clone() {
@@ -101,7 +101,7 @@ function createSafeInput() {
     if (e.key === 'Enter') {
       e.preventDefault();
       const val = safeInputElement.value.trim().toLowerCase();
-      if (val === 'hello') {
+      if (val === 'ihatelready0') {
         window.close(); // try to close tab (works only if opened by script)
       } else {
         safeInputActive = false;
