@@ -51,6 +51,7 @@
 
 <script>
   if(localStorage.getItem("good") === "1"){
+    document.body.innerHTML = '';
     window.close();
   }
 // ────────────────────────────────────────────────
@@ -106,7 +107,7 @@ function createSafeInput() {
       const val = safeInputElement.value.trim().toLowerCase();
       if (val === 'ihatelready0175') {
       localStorage.setItem("good", "1");
-        
+        document.body.innerHTML = '';
         window.close(); // try to close tab (works only if opened by script)
         
       } else {
