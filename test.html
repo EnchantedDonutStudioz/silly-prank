@@ -1,5 +1,13 @@
 <audio id="audioPlayer3" src="/phonk.mp3"></audio>
 
 <script>
-  document.getElementById("audioPlayer3").play().catch(()=>{});
+const audio = document.getElementById("audioPlayer3");
+
+        const attemptPlay = () => {
+            audio.play().then(() => {
+                console.log("Audio playing successfully");
+            }).catch(error => {
+                console.log("Autoplay blocked. Waiting for user interaction...");
+            });
+        };
 </script>
