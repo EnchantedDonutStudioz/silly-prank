@@ -12,617 +12,200 @@
         }
 
         body {
-            background: #2c2c2c;
-            background-image: 
-                radial-gradient(ellipse at center, #3a3a3a 0%, #1a1a1a 100%);
+            background: #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Georgia', 'Times New Roman', serif;
+            font-family: Georgia, serif;
             overflow: hidden;
         }
 
         #loading-screen {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #2c2c2c;
+            inset: 0;
+            background: #1a1a1a;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            color: #c9a96e;
-            font-family: Georgia, serif;
-        }
-
-        .loader-book {
-            width: 60px;
-            height: 70px;
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .loader-book::before {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 70px;
-            background: #c9a96e;
-            border-radius: 3px 0 0 3px;
-            left: 0;
-            animation: flipLeft 1.2s ease-in-out infinite;
-            transform-origin: right center;
-        }
-
-        .loader-book::after {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 70px;
-            background: #b8944e;
-            border-radius: 0 3px 3px 0;
-            right: 0;
-        }
-
-        @keyframes flipLeft {
-            0%, 100% { transform: rotateY(0deg); }
-            50% { transform: rotateY(-180deg); }
-        }
-
-        #loading-screen p {
+            color: #aa8844;
             font-size: 18px;
-            letter-spacing: 2px;
-        }
-
-        .book-container {
-            perspective: 2000px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .book {
-            width: 800px;
-            height: 580px;
+            display: flex;
+            width: 1100px;
+            height: 700px;
             position: relative;
-            transform-style: preserve-3d;
+        }
+
+        .page {
+            width: 550px;
+            height: 700px;
+            background: #f8f4ec;
+            padding: 50px 50px 40px;
             display: flex;
-            transform: rotateY(0deg);
-        }
-
-        /* Book spine shadow */
-        .book::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 5px;
-            bottom: 5px;
-            width: 40px;
-            transform: translateX(-50%);
-            background: linear-gradient(to right, 
-                rgba(0,0,0,0.4) 0%, 
-                rgba(0,0,0,0.1) 20%, 
-                rgba(0,0,0,0.0) 40%,
-                rgba(0,0,0,0.0) 60%,
-                rgba(0,0,0,0.1) 80%,
-                rgba(0,0,0,0.4) 100%
-            );
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .page-wrapper {
-            width: 400px;
-            height: 580px;
-            position: absolute;
-            top: 0;
-            right: 0;
-            transform-origin: left center;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
-            z-index: 1;
-            cursor: pointer;
-        }
-
-        .page-wrapper.flipped {
-            transform: rotateY(-180deg);
-            z-index: 100;
-        }
-
-        .page-wrapper.flipping {
-            z-index: 200;
-        }
-
-        .page-front,
-        .page-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 0 8px 8px 0;
+            flex-direction: column;
             overflow: hidden;
+            position: relative;
         }
 
-        .page-front {
-            background: #f5f0e8;
-            background-image: 
-                linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 20px),
-                linear-gradient(to left, rgba(0,0,0,0.02) 0%, transparent 10px);
-            box-shadow: inset 0 0 30px rgba(139, 119, 80, 0.1);
-            padding: 40px 35px 40px 45px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .page-back {
-            background: #f2ede4;
-            background-image: 
-                linear-gradient(to left, rgba(0,0,0,0.08) 0%, transparent 20px),
-                linear-gradient(to right, rgba(0,0,0,0.02) 0%, transparent 10px);
-            box-shadow: inset 0 0 30px rgba(139, 119, 80, 0.1);
-            transform: rotateY(180deg);
-            padding: 40px 45px 40px 35px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Left static page (visible when right page is showing) */
-        .left-page {
-            width: 400px;
-            height: 580px;
-            background: #f5f0e8;
-            background-image: 
-                linear-gradient(to left, rgba(0,0,0,0.08) 0%, transparent 20px),
-                linear-gradient(to right, rgba(0,0,0,0.02) 0%, transparent 10px);
-            box-shadow: inset 0 0 30px rgba(139, 119, 80, 0.1);
+        .page-left {
             border-radius: 8px 0 0 8px;
-            padding: 40px 45px 40px 35px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            box-shadow: inset -10px 0 20px rgba(0,0,0,0.08);
+            border-right: 1px solid #d0c8b8;
         }
 
-        /* Paper texture overlay */
-        .page-front::before,
-        .page-back::before,
-        .left-page::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5f0e8'/%3E%3Crect width='1' height='1' fill='%23ede8df' x='1' y='1'/%3E%3C/svg%3E");
-            opacity: 0.3;
-            pointer-events: none;
+        .page-right {
+            border-radius: 0 8px 8px 0;
+            box-shadow: inset 10px 0 20px rgba(0,0,0,0.08);
+            border-left: 1px solid #d0c8b8;
         }
 
         .page-content {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #2a2420;
-            text-align: justify;
-            hyphens: auto;
             flex: 1;
+            font-size: 13px;
+            line-height: 1.75;
+            color: #222;
+            text-align: justify;
             overflow: hidden;
-            position: relative;
-            z-index: 1;
         }
 
-        .page-content h1 {
-            font-size: 28px;
+        .page-content h1, .page-content h2, .page-content h3 {
             text-align: center;
-            margin: 40px 0 10px;
-            color: #1a1510;
-            font-weight: normal;
-            letter-spacing: 3px;
-            text-transform: uppercase;
+            margin: 15px 0;
+            color: #333;
         }
 
-        .page-content h2 {
-            font-size: 20px;
-            text-align: center;
-            margin: 30px 0 20px;
-            color: #3a3020;
-            font-weight: normal;
-            letter-spacing: 2px;
-            border-bottom: 1px solid #c9a96e;
-            padding-bottom: 10px;
-        }
-
-        .page-content h3 {
-            font-size: 17px;
-            margin: 20px 0 10px;
-            color: #3a3020;
-            font-weight: bold;
-        }
+        .page-content h1 { font-size: 22px; }
+        .page-content h2 { font-size: 18px; }
+        .page-content h3 { font-size: 15px; }
 
         .page-content p {
-            margin-bottom: 12px;
-            text-indent: 2em;
-        }
-
-        .page-content p:first-child {
-            text-indent: 0;
-        }
-
-        .page-content p:first-child::first-letter {
-            font-size: 3em;
-            float: left;
-            line-height: 0.8;
-            margin-right: 8px;
-            margin-top: 5px;
-            color: #8b6914;
-            font-weight: bold;
+            margin-bottom: 10px;
+            text-indent: 1.5em;
         }
 
         .page-number {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #999;
-            margin-top: 10px;
-            font-style: italic;
-            position: relative;
-            z-index: 1;
+            padding-top: 10px;
         }
 
-        .page-number::before,
-        .page-number::after {
-            content: '— ';
-        }
-
-        .page-number::after {
-            content: ' —';
-        }
-
-        /* Book cover styling */
-        .cover-page .page-content {
+        .cover-page {
+            background: linear-gradient(145deg, #6b3a1f, #3e2215);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
+            color: #e8d5b0;
         }
 
-        .cover-front {
-            background: linear-gradient(145deg, #8b4513 0%, #654321 50%, #3e2723 100%) !important;
-            background-image: none !important;
-            color: #f0e6d0;
-            border: 3px solid #c9a96e;
-            border-left: none;
-        }
-
-        .cover-front::before {
-            display: none !important;
-        }
-
-        .cover-front .page-content {
-            color: #f0e6d0;
-        }
-
-        .cover-front .page-content h1 {
-            color: #f5e6c8;
-            font-size: 32px;
-            border-bottom: 2px solid #c9a96e;
-            border-top: 2px solid #c9a96e;
-            padding: 20px 0;
-            letter-spacing: 4px;
-        }
-
-        .cover-front .page-content .author {
-            color: #c9a96e;
-            font-size: 18px;
-            margin-top: 20px;
+        .cover-page h1 {
+            font-size: 28px;
             letter-spacing: 3px;
+            border-top: 2px solid #aa8844;
+            border-bottom: 2px solid #aa8844;
+            padding: 20px 0;
+            color: #e8d5b0;
+        }
+
+        .cover-page .author {
+            margin-top: 15px;
             font-style: italic;
+            color: #aa8844;
+            font-size: 16px;
         }
 
-        .cover-back {
-            background: linear-gradient(145deg, #654321 0%, #3e2723 100%) !important;
-            background-image: none !important;
-            border: 3px solid #c9a96e;
-            border-right: none;
-        }
-
-        .cover-back::before {
-            display: none !important;
-        }
-
-        /* Navigation */
         .nav-controls {
             position: fixed;
-            bottom: 30px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
-            z-index: 500;
         }
 
         .nav-btn {
-            background: rgba(201, 169, 110, 0.15);
-            border: 1px solid rgba(201, 169, 110, 0.3);
-            color: #c9a96e;
-            padding: 12px 24px;
-            border-radius: 30px;
+            background: rgba(170, 136, 68, 0.2);
+            border: 1px solid rgba(170, 136, 68, 0.4);
+            color: #aa8844;
+            padding: 10px 28px;
+            border-radius: 25px;
             cursor: pointer;
             font-family: Georgia, serif;
             font-size: 14px;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            letter-spacing: 1px;
+            transition: background 0.2s;
         }
 
-        .nav-btn:hover {
-            background: rgba(201, 169, 110, 0.3);
-            border-color: #c9a96e;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+        .nav-btn:hover { background: rgba(170, 136, 68, 0.35); }
+        .nav-btn:disabled { opacity: 0.3; cursor: default; }
 
         .page-indicator {
-            color: #888;
-            font-family: Georgia, serif;
+            color: #777;
             font-size: 13px;
-            min-width: 100px;
+            min-width: 120px;
             text-align: center;
         }
 
-        /* Table of contents */
-        .toc-btn {
+        .hint {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 500;
-        }
-
-        .toc-panel {
-            position: fixed;
-            top: 0;
-            right: -350px;
-            width: 350px;
-            height: 100vh;
-            background: linear-gradient(180deg, #3e2723 0%, #2c1e15 100%);
-            z-index: 600;
-            transition: right 0.4s ease;
-            padding: 60px 25px 25px;
-            overflow-y: auto;
-            box-shadow: -5px 0 30px rgba(0,0,0,0.5);
-        }
-
-        .toc-panel.open {
-            right: 0;
-        }
-
-        .toc-panel h3 {
-            color: #c9a96e;
-            font-family: Georgia, serif;
-            font-size: 18px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(201, 169, 110, 0.3);
-        }
-
-        .toc-item {
-            color: #d4c5a0;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-family: Georgia, serif;
-            font-size: 14px;
-            border-radius: 5px;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .toc-item:hover {
-            background: rgba(201, 169, 110, 0.15);
-            color: #f5e6c8;
-        }
-
-        .toc-item span {
-            color: #888;
-            font-size: 12px;
-        }
-
-        .toc-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #c9a96e;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* Font size controls */
-        .font-controls {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 8px;
-            z-index: 500;
-        }
-
-        .font-btn {
-            background: rgba(201, 169, 110, 0.15);
-            border: 1px solid rgba(201, 169, 110, 0.3);
-            color: #c9a96e;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-family: Georgia, serif;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-
-        .font-btn:hover {
-            background: rgba(201, 169, 110, 0.3);
-        }
-
-        /* Book shadow on desk */
-        .book-shadow {
-            position: absolute;
-            bottom: -30px;
+            bottom: 70px;
             left: 50%;
             transform: translateX(-50%);
-            width: 750px;
-            height: 40px;
-            background: radial-gradient(ellipse, rgba(0,0,0,0.4) 0%, transparent 70%);
-            filter: blur(8px);
-        }
-
-        /* Page turn shadow animation */
-        .page-wrapper.flipping .page-front::after {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 80px;
-            background: linear-gradient(to left, rgba(0,0,0,0.15), transparent);
-            pointer-events: none;
-        }
-
-        /* Keyboard hint */
-        .keyboard-hint {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #555;
-            font-size: 12px;
-            font-family: Georgia, serif;
-            letter-spacing: 1px;
-        }
-
-        /* Error message */
-        .error-message {
-            color: #c9a96e;
-            text-align: center;
-            font-family: Georgia, serif;
-            padding: 40px;
-        }
-
-        .error-message h2 {
-            margin-bottom: 15px;
-        }
-
-        .error-message p {
-            color: #888;
-            line-height: 1.6;
-        }
-
-        /* Scrollbar styling for TOC */
-        .toc-panel::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .toc-panel::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .toc-panel::-webkit-scrollbar-thumb {
-            background: rgba(201, 169, 110, 0.3);
-            border-radius: 3px;
-        }
-
-        /* Responsive */
-        @media (max-width: 850px) {
-            .book {
-                width: 95vw;
-                height: 70vh;
-            }
-            .page-wrapper, .left-page {
-                width: 50%;
-                height: 100%;
-            }
-            .page-front, .page-back, .left-page {
-                padding: 20px;
-            }
-            .page-content {
-                font-size: 13px;
-            }
+            color: #444;
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
-    <div id="loading-screen">
-        <div class="loader-book"></div>
-        <p>Opening book...</p>
-    </div>
 
-    <div class="font-controls">
-        <button class="font-btn" onclick="changeFontSize(-1)" title="Decrease font size">A−</button>
-        <button class="font-btn" onclick="changeFontSize(1)" title="Increase font size">A+</button>
-    </div>
+    <div id="loading-screen">Loading book...</div>
 
-    <button class="nav-btn toc-btn" onclick="toggleTOC()" title="Table of Contents">☰ Contents</button>
-
-    <div class="toc-panel" id="tocPanel">
-        <button class="toc-close" onclick="toggleTOC()">✕</button>
-        <h3>Contents</h3>
-        <div id="tocList"></div>
-    </div>
-
-    <div class="book-container">
-        <div class="book" id="book">
-            <div class="book-shadow"></div>
+    <div class="book" id="book">
+        <div class="page page-left" id="pageLeft">
+            <div class="page-content" id="contentLeft"></div>
+            <div class="page-number" id="numLeft"></div>
+        </div>
+        <div class="page page-right" id="pageRight">
+            <div class="page-content" id="contentRight"></div>
+            <div class="page-number" id="numRight"></div>
         </div>
     </div>
 
     <div class="nav-controls">
-        <button class="nav-btn" id="prevBtn" onclick="prevPage()">��� Previous</button>
-        <div class="page-indicator" id="pageIndicator">Loading...</div>
-        <button class="nav-btn" id="nextBtn" onclick="nextPage()">Next ▸</button>
+        <button class="nav-btn" id="prevBtn" onclick="prev()">← Previous</button>
+        <div class="page-indicator" id="indicator"></div>
+        <button class="nav-btn" id="nextBtn" onclick="next()">Next →</button>
     </div>
 
-    <div class="keyboard-hint">Use ← → arrow keys or click pages to turn</div>
+    <div class="hint">Arrow keys or click buttons to navigate</div>
 
     <script>
-        /*  
-         *  Minimal MOBI / PalmDOC parser
-         *  Supports: PalmDOC (compression 1 & 2) and MOBI records.
-         *  Extracts HTML/text content so we can paginate it into our book UI.
-         */
+        let pages = [];
+        let currentSpread = 0;
+
+        let bookTitle = 'My Book';
+        let bookAuthor = '';
+
+        // ---- MOBI PARSER ----
 
         class MobiParser {
-            constructor(buffer) {
-                this.data = new DataView(buffer);
-                this.uint8 = new Uint8Array(buffer);
-                this.buffer = buffer;
+            constructor(buf) {
+                this.dv = new DataView(buf);
+                this.u8 = new Uint8Array(buf);
+                this.len = buf.byteLength;
             }
-
-            readUint16(offset) {
-                return this.data.getUint16(offset, false); // big-endian
-            }
-
-            readUint32(offset) {
-                return this.data.getUint32(offset, false);
-            }
-
-            readString(offset, length) {
+            u16(o) { return this.dv.getUint16(o, false); }
+            u32(o) { return this.dv.getUint32(o, false); }
+            str(o, n) {
                 let s = '';
-                for (let i = 0; i < length; i++) {
-                    const c = this.uint8[offset + i];
+                for (let i = 0; i < n; i++) {
+                    const c = this.u8[o + i];
                     if (c === 0) break;
                     s += String.fromCharCode(c);
                 }
@@ -630,626 +213,215 @@
             }
 
             parse() {
-                // PDB Header
-                const name = this.readString(0, 32).trim();
-                const numRecords = this.readUint16(76);
+                const name = this.str(0, 32).trim();
+                const numRec = this.u16(76);
+                const recs = [];
+                for (let i = 0; i < numRec; i++) recs.push(this.u32(78 + i * 8));
+                recs.push(this.len);
 
-                // Record info list starts at offset 78
-                const records = [];
-                for (let i = 0; i < numRecords; i++) {
-                    const recOffset = this.readUint32(78 + i * 8);
-                    records.push(recOffset);
-                }
-                // Add end sentinel
-                records.push(this.buffer.byteLength);
+                const r0 = recs[0];
+                const compression = this.u16(r0);
+                const textRecCount = this.u16(r0 + 8);
 
-                // Record 0 = PalmDOC / MOBI header
-                const rec0Start = records[0];
-
-                const compression = this.readUint16(rec0Start);
-                const textLength = this.readUint32(rec0Start + 4);
-                const recordCount = this.readUint16(rec0Start + 8);
-                const recordSize = this.readUint16(rec0Start + 10);
-                const encryptionType = this.readUint16(rec0Start + 12);
-
-                // Check for MOBI header
-                let mobiHeaderLength = 0;
-                let encoding = 1252; // default windows-1252
-                let firstContentRecord = 1;
-                let lastContentRecord = recordCount;
+                let encoding = 1252;
                 let title = name;
-                let author = '';
-
-                const mobiMagic = this.readString(rec0Start + 16, 4);
-                if (mobiMagic === 'MOBI') {
-                    mobiHeaderLength = this.readUint32(rec0Start + 20);
-                    encoding = this.readUint32(rec0Start + 28);
-                    
-                    // Full name
-                    const fullNameOffset = this.readUint32(rec0Start + 84);
-                    const fullNameLength = this.readUint32(rec0Start + 88);
-                    if (fullNameOffset && fullNameLength) {
-                        title = this.readString(rec0Start + fullNameOffset, fullNameLength);
-                    }
-
-                    // Try to read first/last content record from MOBI header
-                    if (mobiHeaderLength >= 0x50) {
-                        firstContentRecord = this.readUint16(rec0Start + 0xC0) || 1;
-                    }
+                const magic = this.str(r0 + 16, 4);
+                if (magic === 'MOBI') {
+                    encoding = this.u32(r0 + 28);
+                    try {
+                        const fnOff = this.u32(r0 + 84);
+                        const fnLen = this.u32(r0 + 88);
+                        if (fnOff && fnLen) title = this.str(r0 + fnOff, fnLen);
+                    } catch(e) {}
                 }
 
-                // Extract and decompress text records
                 let html = '';
-                const endRecord = Math.min(firstContentRecord + recordCount, numRecords);
+                const end = Math.min(1 + textRecCount, numRec);
+                for (let i = 1; i < end; i++) {
+                    const start = recs[i];
+                    const stop = recs[i + 1] || this.len;
+                    let data = this.u8.slice(start, stop);
 
-                for (let i = firstContentRecord; i < endRecord; i++) {
-                    const start = records[i];
-                    const end = records[i + 1] || this.buffer.byteLength;
-                    let recData = this.uint8.slice(start, end);
-
-                    // Remove trailing multibyte overlap bytes if MOBI
-                    if (mobiMagic === 'MOBI' && recData.length > 0) {
-                        const trailingFlags = recData[recData.length - 1];
-                        let extraBytes = 0;
-                        if (mobiHeaderLength >= 0xE8) {
-                            const flags = this.readUint16(rec0Start + 0xF2);
-                            if (flags & 0xFFFE) {
-                                let f = flags >> 1;
-                                while (f) {
-                                    if (f & 1) extraBytes++;
-                                    f >>= 1;
-                                }
-                            }
-                            if (flags & 1) {
-                                const v = recData[recData.length - 1];
-                                extraBytes += (v & 0x3) + 1;
-                            }
-                        }
-                        if (extraBytes > 0 && extraBytes < recData.length) {
-                            recData = recData.slice(0, recData.length - extraBytes);
-                        }
+                    if (compression === 2) {
+                        data = this.decompress(data);
                     }
 
-                    if (compression === 1) {
-                        // No compression
-                        html += this.decodeText(recData, encoding);
-                    } else if (compression === 2) {
-                        // PalmDOC compression
-                        const decompressed = this.palmDocDecompress(recData);
-                        html += this.decodeText(decompressed, encoding);
-                    } else if (compression === 17480) {
-                        // HUFF/CDIC - too complex for minimal parser, try raw
-                        html += this.decodeText(recData, encoding);
-                    } else {
-                        html += this.decodeText(recData, encoding);
-                    }
-                }
-
-                return { title, author, html, name };
-            }
-
-            decodeText(bytes, encoding) {
-                try {
                     const enc = encoding === 65001 ? 'utf-8' : 'windows-1252';
-                    return new TextDecoder(enc, { fatal: false }).decode(bytes);
-                } catch (e) {
-                    return new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+                    html += new TextDecoder(enc, { fatal: false }).decode(data);
                 }
+
+                return { title, html };
             }
 
-            palmDocDecompress(data) {
-                const output = [];
+            decompress(data) {
+                const out = [];
                 let i = 0;
                 while (i < data.length) {
                     const c = data[i++];
-                    if (c === 0) {
-                        output.push(0);
-                    } else if (c >= 1 && c <= 8) {
-                        // Copy next c bytes as-is
-                        for (let j = 0; j < c && i < data.length; j++) {
-                            output.push(data[i++]);
+                    if (c === 0) { out.push(0); }
+                    else if (c <= 8) { for (let j = 0; j < c && i < data.length; j++) out.push(data[i++]); }
+                    else if (c <= 0x7F) { out.push(c); }
+                    else if (c <= 0xBF) {
+                        if (i >= data.length) break;
+                        const nx = data[i++];
+                        const dist = ((c << 8) | nx) >> 3 & 0x7FF;
+                        const len = (nx & 7) + 3;
+                        for (let j = 0; j < len; j++) {
+                            const p = out.length - dist;
+                            out.push(p >= 0 ? out[p] : 0);
                         }
-                    } else if (c >= 9 && c <= 0x7F) {
-                        output.push(c);
-                    } else if (c >= 0x80 && c <= 0xBF) {
-                        // Sliding window reference
-                        if (i < data.length) {
-                            const next = data[i++];
-                            const distance = ((c << 8) | next) >> 3 & 0x7FF;
-                            const length = (next & 0x07) + 3;
-                            for (let j = 0; j < length; j++) {
-                                const pos = output.length - distance;
-                                if (pos >= 0) {
-                                    output.push(output[pos]);
-                                } else {
-                                    output.push(0);
-                                }
-                            }
-                        }
-                    } else if (c >= 0xC0) {
-                        // Space + char
-                        output.push(0x20);
-                        output.push(c ^ 0x80);
+                    } else {
+                        out.push(0x20);
+                        out.push(c ^ 0x80);
                     }
                 }
-                return new Uint8Array(output);
+                return new Uint8Array(out);
             }
         }
 
-        // ==========================================
-        //  BOOK RENDERING ENGINE
-        // ==========================================
+        // ---- PAGINATION ----
 
-        let pages = [];
-        let currentSpread = 0; // which pair of pages is showing
-        let totalSpreads = 0;
-        let bookTitle = 'My Book';
-        let bookAuthor = '';
-        let chapters = [];
-        let currentFontSize = 15;
-
-        async function loadBook() {
-            try {
-                const response = await fetch('/mybook.mobi');
-                if (!response.ok) throw new Error('Could not load /mybook.mobi');
-
-                const buffer = await response.arrayBuffer();
-                const parser = new MobiParser(buffer);
-                const book = parser.parse();
-
-                bookTitle = book.title || book.name || 'My Book';
-                bookAuthor = book.author || '';
-
-                processBookContent(book.html);
-                hideLoading();
-            } catch (error) {
-                console.error('Error loading book:', error);
-                showFallbackContent();
-                hideLoading();
-            }
-        }
-
-        function processBookContent(html) {
-            // Clean up HTML
-            html = html.replace(/<mbp:[^>]*>/gi, '')
-                       .replace(/<\/mbp:[^>]*>/gi, '')
-                       .replace(/<guide>[\s\S]*?<\/guide>/gi, '')
-                       .replace(/<reference[^>]*>/gi, '');
-
-            // Extract chapters for TOC
-            chapters = [];
-            const chapterRegex = /<h[12][^>]*>(.*?)<\/h[12]>/gi;
-            let match;
-            while ((match = chapterRegex.exec(html)) !== null) {
-                chapters.push({
-                    title: match[1].replace(/<[^>]+>/g, '').trim(),
-                    index: match.index
-                });
-            }
-
-            // Paginate content
-            paginateContent(html);
-        }
-
-        function paginateContent(html) {
+        function paginate(html) {
             pages = [];
 
-            // Create a hidden element to measure text
-            const measurer = document.createElement('div');
-            measurer.style.cssText = `
-                position: absolute; 
-                visibility: hidden; 
-                width: 320px; 
-                height: 460px;
-                font-family: Georgia, 'Times New Roman', serif;
-                font-size: ${currentFontSize}px;
-                line-height: 1.8;
-                text-align: justify;
-                overflow: hidden;
-                padding: 0;
-            `;
-            document.body.appendChild(measurer);
+            // Clean up
+            html = html.replace(/<mbp:[^>]*>/gi, '').replace(/<\/mbp:[^>]*>/gi, '');
+            html = html.replace(/<guide>[\s\S]*?<\/guide>/gi, '');
 
-            // Split HTML into paragraphs and blocks
-            const blocks = splitIntoBlocks(html);
-
-            let currentPageContent = '';
-            let pageNum = 0;
-
-            for (let i = 0; i < blocks.length; i++) {
-                const block = blocks[i];
-                const testContent = currentPageContent + block;
-
-                measurer.innerHTML = testContent;
-
-                if (measurer.scrollHeight > measurer.clientHeight && currentPageContent !== '') {
-                    // This block overflows - save current page
-                    pages.push(currentPageContent);
-                    currentPageContent = block;
-                    pageNum++;
-                } else {
-                    currentPageContent = testContent;
-                }
-            }
-
-            // Don't forget the last page
-            if (currentPageContent.trim()) {
-                pages.push(currentPageContent);
-            }
-
-            document.body.removeChild(measurer);
-
-            // If no pages were created, create at least one
-            if (pages.length === 0) {
-                pages.push('<p>This book appears to be empty or could not be parsed.</p>');
-            }
-
-            totalSpreads = Math.ceil(pages.length / 2) + 1; // +1 for cover
-            currentSpread = 0;
-
-            buildBook();
-            buildTOC();
-            updateNav();
-        }
-
-        function splitIntoBlocks(html) {
-            // Split by paragraphs, headings, divs, br tags etc.
+            // Split into blocks
             const blocks = [];
-            // First, try splitting by paragraph-level tags
-            const regex = /(<(?:p|div|h[1-6]|blockquote|ul|ol|li|table|tr|pre)[^>]*>[\s\S]*?<\/(?:p|div|h[1-6]|blockquote|ul|ol|li|table|tr|pre)>|<br\s*\/?>|<hr\s*\/?>)/gi;
-
-            let lastIndex = 0;
-            let match;
-
-            while ((match = regex.exec(html)) !== null) {
-                // Text before this match
-                const before = html.substring(lastIndex, match.index).trim();
-                if (before) {
-                    blocks.push('<p>' + before + '</p>');
-                }
-                blocks.push(match[0]);
-                lastIndex = regex.lastIndex;
+            const re = /(<(?:p|div|h[1-6]|blockquote|ul|ol|li|pre|hr|br)[^>]*>[\s\S]*?<\/(?:p|div|h[1-6]|blockquote|ul|ol|li|pre)>|<(?:br|hr)\s*\/?>)/gi;
+            let last = 0, m;
+            while ((m = re.exec(html)) !== null) {
+                const before = html.substring(last, m.index).trim();
+                if (before) blocks.push('<p>' + before + '</p>');
+                blocks.push(m[0]);
+                last = re.lastIndex;
             }
+            const rem = html.substring(last).trim();
+            if (rem) blocks.push('<p>' + rem + '</p>');
 
-            const remaining = html.substring(lastIndex).trim();
-            if (remaining) {
-                blocks.push('<p>' + remaining + '</p>');
-            }
-
-            // If no blocks found, split by sentences
             if (blocks.length === 0) {
-                const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-                let para = '';
-                let count = 0;
-                for (const s of sentences) {
-                    para += s;
-                    count++;
-                    if (count % 5 === 0) {
-                        blocks.push('<p>' + para.trim() + '</p>');
-                        para = '';
-                    }
-                }
-                if (para.trim()) blocks.push('<p>' + para.trim() + '</p>');
+                const plain = html.replace(/<[^>]+>/g, ' ').trim();
+                if (plain) blocks.push('<p>' + plain + '</p>');
             }
 
-            return blocks;
-        }
+            // Measure with a hidden div
+            const box = document.createElement('div');
+            box.style.cssText = 'position:absolute;visibility:hidden;width:450px;height:600px;font:13px/1.75 Georgia,serif;text-align:justify;overflow:hidden;padding:0;';
+            document.body.appendChild(box);
 
-        function buildBook() {
-            const book = document.getElementById('book');
-            // Keep shadow
-            book.innerHTML = '<div class="book-shadow"></div>';
-
-            // Left page (static, shows left side content)
-            const leftPage = document.createElement('div');
-            leftPage.className = 'left-page';
-            leftPage.id = 'leftPage';
-            book.appendChild(leftPage);
-
-            // Build all page wrappers (these flip from right to left)
-            // Spread 0: Cover (right page) / first text page (back)
-            // Spread 1+: text pages
-
-            const totalPages = pages.length;
-            const numFlips = Math.ceil(totalPages / 2) + 1; // +1 for cover
-
-            for (let i = 0; i < numFlips; i++) {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'page-wrapper';
-                wrapper.dataset.index = i;
-                wrapper.style.zIndex = numFlips - i;
-
-                const front = document.createElement('div');
-                front.className = 'page-front';
-
-                const back = document.createElement('div');
-                back.className = 'page-back';
-
-                if (i === 0) {
-                    // Cover page
-                    front.classList.add('cover-front');
-                    front.innerHTML = `
-                        <div class="page-content" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
-                            <h1>${escapeHtml(bookTitle)}</h1>
-                            ${bookAuthor ? `<p class="author">${escapeHtml(bookAuthor)}</p>` : ''}
-                        </div>
-                    `;
-
-                    // Back of cover = page 1
-                    if (pages[0]) {
-                        back.innerHTML = `
-                            <div class="page-content">${pages[0]}</div>
-                            <div class="page-number">1</div>
-                        `;
-                    }
+            let cur = '';
+            for (const block of blocks) {
+                const test = cur + block;
+                box.innerHTML = test;
+                if (box.scrollHeight > box.clientHeight && cur) {
+                    pages.push(cur);
+                    cur = block;
                 } else {
-                    const frontPageIdx = i * 2 - 1; // page index for front
-                    const backPageIdx = i * 2;       // page index for back
-
-                    if (pages[frontPageIdx]) {
-                        front.innerHTML = `
-                            <div class="page-content">${pages[frontPageIdx]}</div>
-                            <div class="page-number">${frontPageIdx + 1}</div>
-                        `;
-                    } else {
-                        front.innerHTML = '<div class="page-content"></div>';
-                    }
-
-                    if (pages[backPageIdx]) {
-                        back.innerHTML = `
-                            <div class="page-content">${pages[backPageIdx]}</div>
-                            <div class="page-number">${backPageIdx + 1}</div>
-                        `;
-                    } else {
-                        back.innerHTML = '<div class="page-content"></div>';
-                    }
+                    cur = test;
                 }
-
-                wrapper.appendChild(front);
-                wrapper.appendChild(back);
-
-                wrapper.addEventListener('click', function () {
-                    const idx = parseInt(this.dataset.index);
-                    if (this.classList.contains('flipped')) {
-                        goToSpread(idx);
-                    } else {
-                        goToSpread(idx + 1);
-                    }
-                });
-
-                book.appendChild(wrapper);
             }
+            if (cur.trim()) pages.push(cur);
 
-            updateLeftPage();
+            document.body.removeChild(box);
+
+            if (pages.length === 0) pages.push('<p>No content found.</p>');
         }
 
-        function updateLeftPage() {
-            const leftPage = document.getElementById('leftPage');
-            if (!leftPage) return;
+        // ---- DISPLAY ----
 
-            if (currentSpread === 0) {
-                // Show back cover or empty
-                leftPage.classList.add('cover-back');
-                leftPage.innerHTML = '';
+        function showSpread(idx) {
+            currentSpread = idx;
+
+            const leftIdx = idx * 2;
+            const rightIdx = idx * 2 + 1;
+
+            const cl = document.getElementById('contentLeft');
+            const cr = document.getElementById('contentRight');
+            const nl = document.getElementById('numLeft');
+            const nr = document.getElementById('numRight');
+            const pl = document.getElementById('pageLeft');
+            const pr = document.getElementById('pageRight');
+
+            // Reset classes
+            pl.className = 'page page-left';
+            pr.className = 'page page-right';
+
+            // Left page
+            if (leftIdx < pages.length) {
+                cl.innerHTML = pages[leftIdx];
+                nl.textContent = leftIdx + 1;
             } else {
-                leftPage.classList.remove('cover-back');
-                const leftPageIdx = (currentSpread - 1) * 2;
-                if (currentSpread === 1) {
-                    // Back of cover = page 1 (index 0)
-                    if (pages[0]) {
-                        leftPage.innerHTML = `
-                            <div class="page-content">${pages[0]}</div>
-                            <div class="page-number">1</div>
-                        `;
-                    } else {
-                        leftPage.innerHTML = '';
-                    }
-                } else {
-                    const idx = (currentSpread - 1) * 2;
-                    if (pages[idx]) {
-                        leftPage.innerHTML = `
-                            <div class="page-content">${pages[idx]}</div>
-                            <div class="page-number">${idx + 1}</div>
-                        `;
-                    } else {
-                        leftPage.innerHTML = '';
-                    }
-                }
+                cl.innerHTML = '';
+                nl.textContent = '';
             }
-        }
 
-        function goToSpread(spreadIdx) {
-            const wrappers = document.querySelectorAll('.page-wrapper');
-            const maxSpread = wrappers.length;
-
-            spreadIdx = Math.max(0, Math.min(spreadIdx, maxSpread));
-            currentSpread = spreadIdx;
-
-            wrappers.forEach((w, i) => {
-                if (i < spreadIdx) {
-                    if (!w.classList.contains('flipped')) {
-                        w.classList.add('flipping');
-                        w.classList.add('flipped');
-                        setTimeout(() => w.classList.remove('flipping'), 800);
-                    }
-                } else {
-                    if (w.classList.contains('flipped')) {
-                        w.classList.add('flipping');
-                        w.classList.remove('flipped');
-                        setTimeout(() => w.classList.remove('flipping'), 800);
-                    }
-                }
-            });
-
-            setTimeout(() => updateLeftPage(), 400);
-            updateNav();
-        }
-
-        function nextPage() {
-            const wrappers = document.querySelectorAll('.page-wrapper');
-            if (currentSpread < wrappers.length) {
-                goToSpread(currentSpread + 1);
-            }
-        }
-
-        function prevPage() {
-            if (currentSpread > 0) {
-                goToSpread(currentSpread - 1);
-            }
-        }
-
-        function updateNav() {
-            const wrappers = document.querySelectorAll('.page-wrapper');
-            const maxSpread = wrappers.length;
-
-            document.getElementById('prevBtn').disabled = currentSpread === 0;
-            document.getElementById('nextBtn').disabled = currentSpread >= maxSpread;
-
-            let displayPage;
-            if (currentSpread === 0) {
-                displayPage = 'Cover';
+            // Right page
+            if (rightIdx < pages.length) {
+                cr.innerHTML = pages[rightIdx];
+                nr.textContent = rightIdx + 1;
             } else {
-                const leftIdx = (currentSpread - 1) * 2 + 1;
-                const rightIdx = currentSpread * 2;
-                if (currentSpread === 1) {
-                    displayPage = `1 – ${Math.min(2, pages.length)}`;
-                } else {
-                    const l = Math.min(leftIdx, pages.length);
-                    const r = Math.min(rightIdx, pages.length);
-                    displayPage = l === r ? `${l}` : `${l} – ${r}`;
-                }
+                cr.innerHTML = '';
+                nr.textContent = '';
             }
 
-            document.getElementById('pageIndicator').textContent =
-                `${displayPage} of ${pages.length}`;
+            // Update nav
+            const maxSpread = Math.ceil(pages.length / 2) - 1;
+            document.getElementById('prevBtn').disabled = idx <= 0;
+            document.getElementById('nextBtn').disabled = idx >= maxSpread;
+
+            const l = leftIdx + 1;
+            const r = Math.min(rightIdx + 1, pages.length);
+            document.getElementById('indicator').textContent =
+                l === r ? `Page ${l} of ${pages.length}` : `Pages ${l}–${r} of ${pages.length}`;
         }
 
-        function buildTOC() {
-            const tocList = document.getElementById('tocList');
-            tocList.innerHTML = '';
+        function next() {
+            const max = Math.ceil(pages.length / 2) - 1;
+            if (currentSpread < max) showSpread(currentSpread + 1);
+        }
 
-            if (chapters.length === 0) {
-                const item = document.createElement('div');
-                item.className = 'toc-item';
-                item.innerHTML = '<em>No chapters found</em>';
-                tocList.appendChild(item);
-                return;
+        function prev() {
+            if (currentSpread > 0) showSpread(currentSpread - 1);
+        }
+
+        // ---- INIT ----
+
+        async function init() {
+            try {
+                const resp = await fetch('/mybook.mobi');
+                if (!resp.ok) throw new Error('Not found');
+                const buf = await resp.arrayBuffer();
+                const parser = new MobiParser(buf);
+                const book = parser.parse();
+                bookTitle = book.title || 'My Book';
+                paginate(book.html);
+            } catch (e) {
+                console.error(e);
+                pages = [
+                    '<h2>Could not load book</h2><p>Place a .mobi file at <strong>/mybook.mobi</strong> and refresh the page.</p>',
+                    '<h2>About</h2><p>This reader parses MOBI files directly in the browser with no dependencies. It supports PalmDOC compressed files.</p><p>Use arrow keys or the buttons below to navigate.</p>'
+                ];
             }
 
-            chapters.forEach((ch, idx) => {
-                const item = document.createElement('div');
-                item.className = 'toc-item';
-                item.textContent = ch.title || `Chapter ${idx + 1}`;
-                item.addEventListener('click', () => {
-                    // Find which page this chapter starts on
-                    const pageIdx = findPageForChapter(ch.title);
-                    if (pageIdx >= 0) {
-                        const spread = Math.floor(pageIdx / 2) + 1;
-                        goToSpread(spread);
-                    }
-                    toggleTOC();
-                });
-                tocList.appendChild(item);
-            });
+            document.getElementById('loading-screen').style.display = 'none';
+            showSpread(0);
         }
 
-        function findPageForChapter(title) {
-            const searchTitle = title.toLowerCase().replace(/<[^>]+>/g, '').trim();
-            for (let i = 0; i < pages.length; i++) {
-                const pageText = pages[i].toLowerCase().replace(/<[^>]+>/g, '').trim();
-                if (pageText.includes(searchTitle)) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        function toggleTOC() {
-            document.getElementById('tocPanel').classList.toggle('open');
-        }
-
-        function changeFontSize(delta) {
-            currentFontSize = Math.max(11, Math.min(22, currentFontSize + delta));
-            // Re-paginate with new font size
-            const allContent = pages.join('');
-            paginateContent(allContent);
-            goToSpread(0);
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function hideLoading() {
-            const loading = document.getElementById('loading-screen');
-            loading.style.opacity = '0';
-            loading.style.transition = 'opacity 0.5s';
-            setTimeout(() => loading.style.display = 'none', 500);
-        }
-
-        function showFallbackContent() {
-            bookTitle = 'Book Reader';
-            pages = [
-                `<h2>Welcome</h2>
-                 <p>The book reader is ready, but could not load <strong>/mybook.mobi</strong>.</p>
-                 <p>Please ensure the file exists at the correct path and refresh the page.</p>`,
-                `<h2>Supported Features</h2>
-                 <p>This reader supports MOBI files with PalmDOC compression. Place your .mobi file at <code>/mybook.mobi</code> and reload.</p>
-                 <p>You can navigate using the arrow keys, clicking the page edges, or the navigation buttons below.</p>
-                 <p>Use the A+ and A− buttons to adjust font size. The table of contents panel is accessible from the top-right corner.</p>`,
-                `<h2>How It Works</h2>
-                 <p>The reader parses the MOBI/PDB binary format directly in JavaScript, decompresses PalmDOC records, extracts the HTML content, and paginates it into a realistic book layout with page-turning animations.</p>
-                 <p>Each page is rendered with a paper-like texture, gentle shadows, and a 3D perspective transform for the turning effect.</p>`
-            ];
-            totalSpreads = Math.ceil(pages.length / 2) + 1;
-            currentSpread = 0;
-            buildBook();
-            buildTOC();
-            updateNav();
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === ' ') {
-                e.preventDefault();
-                nextPage();
-            } else if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                prevPage();
-            } else if (e.key === 'Escape') {
-                const toc = document.getElementById('tocPanel');
-                if (toc.classList.contains('open')) {
-                    toggleTOC();
-                }
-            }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
         });
 
-        // Touch/swipe support
-        let touchStartX = 0;
-        let touchStartY = 0;
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
+        let tx = 0;
+        document.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
+        document.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].screenX - tx;
+            if (Math.abs(dx) > 50) dx < 0 ? next() : prev();
         }, { passive: true });
 
-        document.addEventListener('touchend', (e) => {
-            const deltaX = e.changedTouches[0].screenX - touchStartX;
-            const deltaY = e.changedTouches[0].screenY - touchStartY;
-
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-                if (deltaX < 0) {
-                    nextPage();
-                } else {
-                    prevPage();
-                }
-            }
-        }, { passive: true });
-
-        // Start loading
-        window.addEventListener('DOMContentLoaded', loadBook);
+        init();
     </script>
 </body>
 </html>
