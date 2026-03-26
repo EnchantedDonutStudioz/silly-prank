@@ -14,6 +14,7 @@
         body {
             background: #1a1a1a;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -26,7 +27,6 @@
             inset: 0;
             background: #1a1a1a;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -37,19 +37,17 @@
         .book {
             display: flex;
             width: 1100px;
-            height: 700px;
-            position: relative;
+            height: 680px;
+            margin-bottom: 10px;
         }
 
         .page {
             width: 550px;
-            height: 700px;
+            height: 680px;
             background: #f8f4ec;
-            padding: 50px 50px 40px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
         }
 
         .page-left {
@@ -64,12 +62,19 @@
             border-left: 1px solid #d0c8b8;
         }
 
-        .page-content {
+        .page-inner {
             flex: 1;
+            padding: 45px 45px 10px;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .page-content {
             font-size: 13px;
             line-height: 1.75;
             color: #222;
             text-align: justify;
+            height: 100%;
             overflow: hidden;
         }
 
@@ -92,73 +97,90 @@
             text-align: center;
             font-size: 11px;
             color: #999;
-            padding-top: 10px;
+            padding: 8px 0 12px;
+            flex-shrink: 0;
         }
 
-        .cover-page {
-            background: linear-gradient(145deg, #6b3a1f, #3e2215);
+        .controls-bar {
+            width: 1100px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            text-align: center;
-            color: #e8d5b0;
-        }
-
-        .cover-page h1 {
-            font-size: 28px;
-            letter-spacing: 3px;
-            border-top: 2px solid #aa8844;
-            border-bottom: 2px solid #aa8844;
-            padding: 20px 0;
-            color: #e8d5b0;
-        }
-
-        .cover-page .author {
-            margin-top: 15px;
-            font-style: italic;
-            color: #aa8844;
-            font-size: 16px;
-        }
-
-        .nav-controls {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
         }
 
         .nav-btn {
-            background: rgba(170, 136, 68, 0.2);
-            border: 1px solid rgba(170, 136, 68, 0.4);
+            background: rgba(170,136,68,0.2);
+            border: 1px solid rgba(170,136,68,0.4);
             color: #aa8844;
-            padding: 10px 28px;
-            border-radius: 25px;
+            padding: 8px 22px;
+            border-radius: 20px;
             cursor: pointer;
             font-family: Georgia, serif;
-            font-size: 14px;
-            transition: background 0.2s;
+            font-size: 13px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .nav-btn:hover { background: rgba(170, 136, 68, 0.35); }
+        .nav-btn:hover { background: rgba(170,136,68,0.35); }
         .nav-btn:disabled { opacity: 0.3; cursor: default; }
 
-        .page-indicator {
+        .slider-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            min-width: 0;
+        }
+
+        #slider {
+            width: 100%;
+            accent-color: #aa8844;
+            cursor: pointer;
+        }
+
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .page-jump label {
             color: #777;
-            font-size: 13px;
-            min-width: 120px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        #pageInput {
+            width: 55px;
+            background: rgba(170,136,68,0.15);
+            border: 1px solid rgba(170,136,68,0.4);
+            color: #ccc;
+            padding: 5px 8px;
+            border-radius: 6px;
+            font-family: Georgia, serif;
+            font-size: 12px;
             text-align: center;
         }
 
-        .hint {
-            position: fixed;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #444;
-            font-size: 11px;
+        #pageInput:focus {
+            outline: none;
+            border-color: #aa8844;
+        }
+
+        #jumpBtn {
+            padding: 5px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .page-indicator {
+            color: #777;
+            font-size: 12px;
+            min-width: 110px;
+            text-align: center;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -168,29 +190,36 @@
 
     <div class="book" id="book">
         <div class="page page-left" id="pageLeft">
-            <div class="page-content" id="contentLeft"></div>
+            <div class="page-inner">
+                <div class="page-content" id="contentLeft"></div>
+            </div>
             <div class="page-number" id="numLeft"></div>
         </div>
         <div class="page page-right" id="pageRight">
-            <div class="page-content" id="contentRight"></div>
+            <div class="page-inner">
+                <div class="page-content" id="contentRight"></div>
+            </div>
             <div class="page-number" id="numRight"></div>
         </div>
     </div>
 
-    <div class="nav-controls">
-        <button class="nav-btn" id="prevBtn" onclick="prev()">← Previous</button>
+    <div class="controls-bar">
+        <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+        <div class="slider-wrap">
+            <input type="range" id="slider" min="0" max="0" value="0">
+        </div>
         <div class="page-indicator" id="indicator"></div>
+        <div class="page-jump">
+            <label>Page:</label>
+            <input type="number" id="pageInput" min="1" value="1">
+            <button class="nav-btn" id="jumpBtn" onclick="jumpToPage()">Go</button>
+        </div>
         <button class="nav-btn" id="nextBtn" onclick="next()">Next →</button>
     </div>
-
-    <div class="hint">Arrow keys or click buttons to navigate</div>
 
     <script>
         let pages = [];
         let currentSpread = 0;
-
-        let bookTitle = 'My Book';
-        let bookAuthor = '';
 
         // ---- MOBI PARSER ----
 
@@ -241,11 +270,7 @@
                     const start = recs[i];
                     const stop = recs[i + 1] || this.len;
                     let data = this.u8.slice(start, stop);
-
-                    if (compression === 2) {
-                        data = this.decompress(data);
-                    }
-
+                    if (compression === 2) data = this.decompress(data);
                     const enc = encoding === 65001 ? 'utf-8' : 'windows-1252';
                     html += new TextDecoder(enc, { fatal: false }).decode(data);
                 }
@@ -258,9 +283,9 @@
                 let i = 0;
                 while (i < data.length) {
                     const c = data[i++];
-                    if (c === 0) { out.push(0); }
+                    if (c === 0) out.push(0);
                     else if (c <= 8) { for (let j = 0; j < c && i < data.length; j++) out.push(data[i++]); }
-                    else if (c <= 0x7F) { out.push(c); }
+                    else if (c <= 0x7F) out.push(c);
                     else if (c <= 0xBF) {
                         if (i >= data.length) break;
                         const nx = data[i++];
@@ -284,11 +309,9 @@
         function paginate(html) {
             pages = [];
 
-            // Clean up
             html = html.replace(/<mbp:[^>]*>/gi, '').replace(/<\/mbp:[^>]*>/gi, '');
             html = html.replace(/<guide>[\s\S]*?<\/guide>/gi, '');
 
-            // Split into blocks
             const blocks = [];
             const re = /(<(?:p|div|h[1-6]|blockquote|ul|ol|li|pre|hr|br)[^>]*>[\s\S]*?<\/(?:p|div|h[1-6]|blockquote|ul|ol|li|pre)>|<(?:br|hr)\s*\/?>)/gi;
             let last = 0, m;
@@ -306,9 +329,24 @@
                 if (plain) blocks.push('<p>' + plain + '</p>');
             }
 
-            // Measure with a hidden div
+            // Measure using a clone of actual page dimensions
             const box = document.createElement('div');
-            box.style.cssText = 'position:absolute;visibility:hidden;width:450px;height:600px;font:13px/1.75 Georgia,serif;text-align:justify;overflow:hidden;padding:0;';
+            // Match .page-inner minus bottom padding, and .page-content styles
+            // .page is 680px, .page-inner padding-top 45px padding-bottom 10px = 55px
+            // .page-number is ~30px. So content area ≈ 680 - 55 - 30 = 595
+            // .page-inner width = 550 - 45*2 = 460
+            box.style.cssText = `
+                position: absolute;
+                visibility: hidden;
+                width: 460px;
+                height: 595px;
+                font-family: Georgia, serif;
+                font-size: 13px;
+                line-height: 1.75;
+                text-align: justify;
+                overflow: hidden;
+                padding: 0;
+            `;
             document.body.appendChild(box);
 
             let cur = '';
@@ -332,6 +370,8 @@
         // ---- DISPLAY ----
 
         function showSpread(idx) {
+            const maxSpread = Math.max(0, Math.ceil(pages.length / 2) - 1);
+            idx = Math.max(0, Math.min(idx, maxSpread));
             currentSpread = idx;
 
             const leftIdx = idx * 2;
@@ -341,14 +381,7 @@
             const cr = document.getElementById('contentRight');
             const nl = document.getElementById('numLeft');
             const nr = document.getElementById('numRight');
-            const pl = document.getElementById('pageLeft');
-            const pr = document.getElementById('pageRight');
 
-            // Reset classes
-            pl.className = 'page page-left';
-            pr.className = 'page page-right';
-
-            // Left page
             if (leftIdx < pages.length) {
                 cl.innerHTML = pages[leftIdx];
                 nl.textContent = leftIdx + 1;
@@ -357,7 +390,6 @@
                 nl.textContent = '';
             }
 
-            // Right page
             if (rightIdx < pages.length) {
                 cr.innerHTML = pages[rightIdx];
                 nr.textContent = rightIdx + 1;
@@ -366,24 +398,38 @@
                 nr.textContent = '';
             }
 
-            // Update nav
-            const maxSpread = Math.ceil(pages.length / 2) - 1;
             document.getElementById('prevBtn').disabled = idx <= 0;
             document.getElementById('nextBtn').disabled = idx >= maxSpread;
 
+            // Update slider
+            const slider = document.getElementById('slider');
+            slider.max = maxSpread;
+            slider.value = idx;
+
+            // Update indicator
             const l = leftIdx + 1;
             const r = Math.min(rightIdx + 1, pages.length);
             document.getElementById('indicator').textContent =
-                l === r ? `Page ${l} of ${pages.length}` : `Pages ${l}–${r} of ${pages.length}`;
+                l === r ? `Page ${l} of ${pages.length}` : `${l}–${r} of ${pages.length}`;
+
+            // Update page input placeholder
+            document.getElementById('pageInput').value = l;
         }
 
         function next() {
-            const max = Math.ceil(pages.length / 2) - 1;
-            if (currentSpread < max) showSpread(currentSpread + 1);
+            showSpread(currentSpread + 1);
         }
 
         function prev() {
-            if (currentSpread > 0) showSpread(currentSpread - 1);
+            showSpread(currentSpread - 1);
+        }
+
+        function jumpToPage() {
+            const val = parseInt(document.getElementById('pageInput').value);
+            if (isNaN(val) || val < 1) return;
+            const pageIdx = val - 1;
+            const spread = Math.floor(pageIdx / 2);
+            showSpread(spread);
         }
 
         // ---- INIT ----
@@ -395,13 +441,12 @@
                 const buf = await resp.arrayBuffer();
                 const parser = new MobiParser(buf);
                 const book = parser.parse();
-                bookTitle = book.title || 'My Book';
                 paginate(book.html);
             } catch (e) {
                 console.error(e);
                 pages = [
                     '<h2>Could not load book</h2><p>Place a .mobi file at <strong>/mybook.mobi</strong> and refresh the page.</p>',
-                    '<h2>About</h2><p>This reader parses MOBI files directly in the browser with no dependencies. It supports PalmDOC compressed files.</p><p>Use arrow keys or the buttons below to navigate.</p>'
+                    '<h2>About</h2><p>This reader parses MOBI files directly in the browser. Use arrow keys, buttons, the slider, or type a page number to navigate.</p>'
                 ];
             }
 
@@ -409,11 +454,27 @@
             showSpread(0);
         }
 
+        // Keyboard
         document.addEventListener('keydown', e => {
+            if (document.activeElement === document.getElementById('pageInput')) {
+                if (e.key === 'Enter') { jumpToPage(); e.preventDefault(); }
+                return;
+            }
             if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
             if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
         });
 
+        // Slider
+        document.getElementById('slider').addEventListener('input', function () {
+            showSpread(parseInt(this.value));
+        });
+
+        // Page input enter key
+        document.getElementById('pageInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { jumpToPage(); e.preventDefault(); }
+        });
+
+        // Touch swipe
         let tx = 0;
         document.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, { passive: true });
         document.addEventListener('touchend', e => {
