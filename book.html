@@ -149,10 +149,20 @@
     <div id="loading-screen">Processing Manuscript...</div>
 
     <div id="scaler">
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Find in book..." onkeydown="if(event.key==='Enter') searchBook()">
-            <button class="nav-btn" style="padding: 4px 15px;" onclick="searchBook()">Search</button>
-        </div>
+      <!-- Replace your current .search-bar with this enhanced version -->
+<div class="search-bar" style="gap: 8px; padding: 8px 15px;">
+    <input type="text" id="searchInput" placeholder="Find in book..." 
+           onkeydown="if(event.key==='Enter') searchBook()">
+    
+    <button class="nav-btn" style="padding: 4px 15px;" onclick="searchBook()">Search</button>
+    
+    <div id="searchInfo" style="margin-left: 10px; color: #aa8844; font-size: 13px; min-width: 140px; display: none;">
+        <span id="matchCount"></span>
+    </div>
+
+    <button class="nav-btn" id="prevMatchBtn" onclick="prevMatch()" style="display: none; padding: 4px 12px;">↑</button>
+    <button class="nav-btn" id="nextMatchBtn" onclick="nextMatch()" style="display: none; padding: 4px 12px;">↓</button>
+</div>
 
         <div class="book" id="book">
             <div class="page page-left">
@@ -292,31 +302,118 @@
         }
 
         // ---- SEARCH FEATURE ----
-        function searchBook() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
+      // Global variables for search
+let currentMatches = [];
+let currentMatchIndex = -1;
+let lastSearchQuery = "";
 
-            // Re-paginate from raw HTML to clear old highlights
-            paginate(fullBookHtml);
+function searchBook() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (!query) {
+        clearSearch();
+        return;
+    }
 
-            let firstMatchSpread = -1;
-            const regex = new RegExp(`(${query})`, 'gi');
+    if (query === lastSearchQuery && currentMatches.length > 0) {
+        // Just navigate to next match if same query
+        nextMatch();
+        return;
+    }
 
-            pages = pages.map((content, idx) => {
-                if (content.toLowerCase().includes(query.toLowerCase())) {
-                    if (firstMatchSpread === -1) firstMatchSpread = Math.floor(idx / 2);
-                    return content.replace(regex, `<mark>$1</mark>`);
-                }
-                return content;
+    lastSearchQuery = query;
+    clearSearchHighlights(); // Remove old highlights
+
+    // Re-paginate from original clean HTML
+    paginate(fullBookHtml);
+
+    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+    currentMatches = [];
+
+    // Find all matches with their page and position info
+    pages.forEach((content, pageIndex) => {
+        let match;
+        while ((match = regex.exec(content)) !== null) {
+            currentMatches.push({
+                pageIndex: pageIndex,
+                spreadIndex: Math.floor(pageIndex / 2),
+                matchText: match[0],
+                offset: match.index
             });
-
-            if (firstMatchSpread !== -1) {
-                showSpread(firstMatchSpread);
-            } else {
-                alert("No matches found.");
-            }
         }
+    });
 
+    const matchCountEl = document.getElementById('matchCount');
+    const infoEl = document.getElementById('searchInfo');
+    const prevBtn = document.getElementById('prevMatchBtn');
+    const nextBtn = document.getElementById('nextMatchBtn');
+
+    if (currentMatches.length === 0) {
+        infoEl.style.display = 'inline-block';
+        matchCountEl.textContent = "No matches";
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        alert("No matches found for \"" + query + "\"");
+        return;
+    }
+
+    // Highlight ALL matches in the pages array
+    const highlightedPages = pages.map((content, idx) => {
+        return content.replace(regex, `<mark>$1</mark>`);
+    });
+
+    // Update pages with highlights (so they stay when flipping)
+    pages = highlightedPages;
+
+    // Show info
+    infoEl.style.display = 'inline-block';
+    matchCountEl.textContent = `${currentMatches.length} match${currentMatches.length > 1 ? 'es' : ''}`;
+
+    prevBtn.style.display = 'inline-block';
+    nextBtn.style.display = 'inline-block';
+
+    currentMatchIndex = 0;
+    showSpread(currentMatches[0].spreadIndex);
+}
+
+function clearSearchHighlights() {
+    if (fullBookHtml) {
+        paginate(fullBookHtml); // Reset to clean pages
+    }
+    currentMatches = [];
+    currentMatchIndex = -1;
+    lastSearchQuery = "";
+    
+    document.getElementById('searchInfo').style.display = 'none';
+    document.getElementById('prevMatchBtn').style.display = 'none';
+    document.getElementById('nextMatchBtn').style.display = 'none';
+}
+
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function prevMatch() {
+    if (currentMatches.length === 0) return;
+    currentMatchIndex = (currentMatchIndex - 1 + currentMatches.length) % currentMatches.length;
+    showSpread(currentMatches[currentMatchIndex].spreadIndex);
+}
+
+function nextMatch() {
+    if (currentMatches.length === 0) return;
+    currentMatchIndex = (currentMatchIndex + 1) % currentMatches.length;
+    showSpread(currentMatches[currentMatchIndex].spreadIndex);
+}
+
+// Optional: Clear search when clicking outside or pressing Esc
+document.addEventListener('keydown', e => {
+    if (e.key === "Escape") {
+        const input = document.getElementById('searchInput');
+        if (document.activeElement === input) {
+            input.value = "";
+            clearSearchHighlights();
+        }
+    }
+});
         // ---- DISPLAY LOGIC ----
         function showSpread(idx) {
             const max = Math.max(0, Math.ceil(pages.length / 2) - 1);
