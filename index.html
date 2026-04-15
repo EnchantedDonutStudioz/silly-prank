@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Fullscreen Prank</title>
+  <title>babby boo</title>
   <style>
     body { margin:0; padding:0; overflow:hidden; background:#000; cursor:pointer; font-family:Arial, sans-serif; }
     #image { width:100%; height:100vh; object-fit:cover; position:fixed; top:0; left:0; }
@@ -71,8 +71,8 @@ function prank() {
   document.getElementById("image").style.display = "block";
 
 
+  document.getElementById("audioPlayer").play().catch(()=>{});
   document.getElementById("audioPlayer2").play().catch(()=>{});
-  document.getElementById("audioPlayer3").play().catch(()=>{});
   clone();
   setInterval(clone, 350);
 }
